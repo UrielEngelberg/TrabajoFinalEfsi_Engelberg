@@ -14,6 +14,25 @@ export const useUser = () => {
   return context
 }
 
+// Helpers de storage
+const USERS_KEY = 'mv:users' // diccionario por username
+const CURRENT_USER_KEY = 'mv:user' // sesión actual
+
+function loadUsersMap() {
+  try {
+    const raw = localStorage.getItem(USERS_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw)
+    return typeof parsed === 'object' && parsed ? parsed : {}
+  } catch (e) {
+    return {}
+  }
+}
+
+function saveUsersMap(usersMap) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(usersMap))
+}
+
 // Provider del contexto de usuario que envuelve la aplicación
 export const UserProvider = ({ children }) => {
   // Estado del usuario actual (null si no está autenticado)
@@ -25,10 +44,8 @@ export const UserProvider = ({ children }) => {
   // Efecto que se ejecuta al cargar la aplicación
   // Verifica si hay un usuario guardado en localStorage
   useEffect(() => {
-    // Intentar cargar usuario desde localStorage
-    const savedUser = localStorage.getItem('mv:user')
+    const savedUser = localStorage.getItem(CURRENT_USER_KEY)
     if (savedUser) {
-      // Parsear el JSON y restaurar el estado del usuario
       const userData = JSON.parse(savedUser)
       setUser(userData)
       setIsAuthenticated(true)
@@ -37,31 +54,54 @@ export const UserProvider = ({ children }) => {
 
   // Función para iniciar sesión o crear nuevo usuario
   const login = (username, pin) => {
-    // Crear objeto de usuario con datos básicos
-    const userData = {
-      id: Date.now().toString(), // ID único basado en timestamp
-      username, // Nombre de usuario
-      pin, // PIN de seguridad
-      createdAt: new Date().toISOString() // Fecha de creación
+    const normalizedUsername = username.trim().toLowerCase()
+    const usersMap = loadUsersMap()
+
+    const existing = usersMap[normalizedUsername]
+    if (existing) {
+      // Validar PIN del usuario existente
+      if (existing.pin !== pin) {
+        throw new Error('PIN incorrecto')
+      }
+      const sessionUser = {
+        id: existing.id,
+        username: existing.username,
+        createdAt: existing.createdAt
+      }
+      setUser(sessionUser)
+      setIsAuthenticated(true)
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionUser))
+      return
     }
-    
-    // Actualizar estado local
-    setUser(userData)
+
+    // Crear nuevo usuario si no existe
+    const newUserRecord = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      username: normalizedUsername,
+      pin,
+      createdAt: new Date().toISOString()
+    }
+
+    usersMap[normalizedUsername] = newUserRecord
+    saveUsersMap(usersMap)
+
+    // Sesión (sin exponer el PIN)
+    const sessionUser = {
+      id: newUserRecord.id,
+      username: newUserRecord.username,
+      createdAt: newUserRecord.createdAt
+    }
+
+    setUser(sessionUser)
     setIsAuthenticated(true)
-    
-    // Guardar en localStorage para persistencia
-    localStorage.setItem('mv:user', JSON.stringify(userData))
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionUser))
   }
 
-  // Función para cerrar sesión
+  // Función para cerrar sesión (sin borrar la mascota del usuario)
   const logout = () => {
-    // Limpiar estado local
     setUser(null)
     setIsAuthenticated(false)
-    
-    // Limpiar localStorage
-    localStorage.removeItem('mv:user')
-    localStorage.removeItem(`mv:pet:${user?.id}`) // También limpiar datos de mascota
+    localStorage.removeItem(CURRENT_USER_KEY)
   }
 
   // Objeto con todos los valores y funciones que estarán disponibles

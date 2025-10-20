@@ -13,8 +13,8 @@ export const usePetTick = (pet, setPet, user) => {
       const now = Date.now()
       const timeSinceLastTick = now - pet.lastTick
       
-      // Verificar si han pasado 5 minutos (300000ms) desde el último tick
-      if (timeSinceLastTick >= 300000) {
+      // Verificar si han pasado 2 minutos (120000ms) desde el último tick
+      if (timeSinceLastTick >= 120000) {
         // Aplicar degradación según las reglas del juego:
         // - Hambre: -5 puntos
         // - Energía: -3 puntos  

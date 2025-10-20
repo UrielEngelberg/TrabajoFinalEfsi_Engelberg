@@ -147,13 +147,31 @@ export const PetProvider = ({ children }) => {
     return true // Indicar que la acción fue exitosa
   }
 
+  // Función para resetear la mascota cuando muere
+  const resetPet = () => {
+    const newPet = {
+      hunger: 50,
+      energy: 50,
+      happiness: 50,
+      sleeping: false,
+      lastTick: Date.now(),
+      cooldowns: {
+        feed: 0,
+        play: 0,
+        sleep: 0
+      }
+    }
+    setPet(newPet)
+  }
+
   // Objeto con todos los valores y funciones que estarán disponibles
   // para los componentes que usen este contexto
   const value = {
     pet, // Estado actual de la mascota
     feedPet, // Función para alimentar
     playWithPet, // Función para jugar
-    putPetToSleep // Función para dormir
+    putPetToSleep, // Función para dormir
+    resetPet // Función para resetear cuando muere
   }
 
   // Renderizar el provider con el valor del contexto

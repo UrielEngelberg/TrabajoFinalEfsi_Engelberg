@@ -7,21 +7,33 @@ const PetSprite = () => {
   // Obtener estado de la mascota desde el contexto
   const { pet } = usePet()
 
+  // SVG pixel art embebido como data URI para evitar dependencias externas (estilo Pou)
+  const pixelArt = `url("data:image/svg+xml;utf8,${encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'>
+      <rect width='16' height='16' fill='#b3e5fc'/>
+      <!-- cuerpo pou (triángulo redondeado pixelado) -->
+      <rect x='3' y='6' width='10' height='7' fill='#c69c6d'/>
+      <rect x='4' y='5' width='8' height='1' fill='#c69c6d'/>
+      <rect x='5' y='4' width='6' height='1' fill='#c69c6d'/>
+      <rect x='6' y='3' width='4' height='1' fill='#c69c6d'/>
+      <!-- vientre más claro -->
+      <rect x='5' y='9' width='6' height='3' fill='#e0c9a6'/>
+      <!-- ojos -->
+      <rect x='6' y='7' width='2' height='2' fill='#fff'/>
+      <rect x='8' y='7' width='2' height='2' fill='#fff'/>
+      <rect x='6' y='8' width='1' height='1' fill='#333'/>
+      <rect x='9' y='8' width='1' height='1' fill='#333'/>
+      <!-- boca -->
+      <rect x='7' y='10' width='2' height='1' fill='#8d6e63'/>
+    </svg>`
+  )}")`
+
   // Función que determina qué clase CSS usar según el estado de la mascota
   const getSpriteClass = () => {
-    // Si está durmiendo, mostrar sprite de sueño
     if (pet.sleeping) return 'pet-sprite pet-sleeping'
-    
-    // Si tiene hambre crítica, mostrar sprite hambriento
     if (pet.hunger < 20) return 'pet-sprite pet-hungry'
-    
-    // Si tiene energía crítica, mostrar sprite cansado
     if (pet.energy < 20) return 'pet-sprite pet-tired'
-    
-    // Si tiene felicidad crítica, mostrar sprite triste
     if (pet.happiness < 20) return 'pet-sprite pet-sad'
-    
-    // Si todo está bien, mostrar sprite feliz
     return 'pet-sprite pet-happy'
   }
 
@@ -29,11 +41,10 @@ const PetSprite = () => {
     <div 
       className={getSpriteClass()}
       style={{
-        // Placeholder para el sprite - aquí irá la imagen real
-        backgroundImage: 'url(/src/assets/pet-sprite.png)',
-        backgroundSize: 'contain', // Ajustar imagen al contenedor
-        backgroundRepeat: 'no-repeat', // No repetir la imagen
-        backgroundPosition: 'center' // Centrar la imagen
+        backgroundImage: pixelArt,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center'
       }}
     />
   )

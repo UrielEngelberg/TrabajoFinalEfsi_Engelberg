@@ -134,6 +134,9 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   animation: petIdle 2s ease-in-out infinite;
+  /* Renderizado pixelado para sprites */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 /* Animación de respiración para la mascota */

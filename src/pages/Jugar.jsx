@@ -59,13 +59,10 @@ const Jugar = () => {
     
     setGameActive(false)
     
-    // Calcular bonificación basada en clics
-    const bonus = Math.min(clicks * 2, 20) // Máximo 20 puntos extra
-    
-    // Aplicar efectos de jugar
+    // Aplicar efectos de jugar (felicidad +15, energía -10)
     const success = playWithPet()
     if (success) {
-      console.log(`Juego terminado! Clics: ${clicks}, Bonificación: +${bonus}`)
+      console.log(`Juego terminado! Clics: ${clicks}`)
     }
   }
 
@@ -150,7 +147,7 @@ const Jugar = () => {
         <h3>💡 Consejos:</h3>
         <ul>
           <li>Haz clic lo más rápido que puedas durante 10 segundos</li>
-          <li>Cada clic puede dar bonificaciones adicionales</li>
+          <li>Los efectos se aplican al terminar el juego</li>
           <li>Jugar consume energía, úsalo con moderación</li>
           <li>No puedes jugar mientras la mascota duerme</li>
         </ul>
