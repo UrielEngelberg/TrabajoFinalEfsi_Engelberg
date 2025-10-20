@@ -1,0 +1,34 @@
+{
+  // Configuración del proyecto de mascota virtual
+  "name": "mascota-virtual",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module", // Permite usar import/export ES6 modules
+  
+  // Scripts para desarrollo, construcción y preview
+  "scripts": {
+    "dev": "vite", // Inicia el servidor de desarrollo
+    "build": "vite build", // Construye la aplicación para producción
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0", // Verifica calidad del código
+    "preview": "vite preview" // Preview de la build de producción
+  },
+  
+  // Dependencias principales del proyecto
+  "dependencies": {
+    "react": "^18.2.0", // Biblioteca principal de React para UI
+    "react-dom": "^18.2.0", // React DOM para renderizar en el navegador
+    "react-router-dom": "^6.20.1" // Router para navegación entre páginas
+  },
+  
+  // Dependencias de desarrollo (no se incluyen en producción)
+  "devDependencies": {
+    "@types/react": "^18.2.37", // Tipos TypeScript para React
+    "@types/react-dom": "^18.2.15", // Tipos TypeScript para React DOM
+    "@vitejs/plugin-react": "^4.1.1", // Plugin de Vite para React
+    "eslint": "^8.53.0", // Linter para verificar calidad del código
+    "eslint-plugin-react": "^7.33.2", // Reglas ESLint específicas para React
+    "eslint-plugin-react-hooks": "^4.6.0", // Reglas para hooks de React
+    "eslint-plugin-react-refresh": "^0.4.4", // Plugin para hot reload
+    "vite": "^5.0.0" // Bundler y servidor de desarrollo rápido
+  }
+}

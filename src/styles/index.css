@@ -1,0 +1,397 @@
+/* Estilos CSS para la aplicación de mascota virtual */
+
+/* Reset básico y configuración global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Configuración del body con gradiente de fondo */
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
+}
+
+/* Contenedor principal de React */
+#root {
+  min-height: 100vh;
+}
+
+/* Contenedor principal con ancho máximo */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Estilo de tarjetas con efecto glassmorphism */
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Estilo base para botones */
+.btn {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Efecto hover para botones */
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Estado deshabilitado para botones */
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Variantes de colores para botones */
+.btn-secondary {
+  background: linear-gradient(45deg, #74b9ff, #0984e3);
+}
+
+.btn-success {
+  background: linear-gradient(45deg, #00b894, #00a085);
+}
+
+.btn-warning {
+  background: linear-gradient(45deg, #fdcb6e, #e17055);
+}
+
+.btn-disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Estilo para barras de estadísticas */
+.stats-bar {
+  width: 100%;
+  height: 20px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+/* Relleno de las barras de estadísticas */
+.stats-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 10px;
+}
+
+/* Colores específicos para cada tipo de estadística */
+.stats-hunger {
+  background: linear-gradient(90deg, #ff6b6b, #ee5a24);
+}
+
+.stats-energy {
+  background: linear-gradient(90deg, #74b9ff, #0984e3);
+}
+
+.stats-happiness {
+  background: linear-gradient(90deg, #fdcb6e, #e17055);
+}
+
+/* Contenedor de estadísticas */
+.stats-container {
+  margin: 15px 0;
+}
+
+.stats-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Estilo para el sprite de la mascota */
+.pet-sprite {
+  width: 200px;
+  height: 200px;
+  margin: 20px auto;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: petIdle 2s ease-in-out infinite;
+}
+
+/* Animación de respiración para la mascota */
+@keyframes petIdle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Estados específicos del sprite */
+.pet-sleeping {
+  animation: petSleep 3s ease-in-out infinite;
+}
+
+.pet-hungry {
+  animation: petHungry 1s ease-in-out infinite;
+}
+
+.pet-tired {
+  animation: petTired 2s ease-in-out infinite;
+}
+
+.pet-sad {
+  animation: petSad 1.5s ease-in-out infinite;
+}
+
+.pet-happy {
+  animation: petHappy 2s ease-in-out infinite;
+}
+
+/* Animaciones específicas para cada estado */
+@keyframes petSleep {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-5px) scale(1.05); }
+}
+
+@keyframes petHungry {
+  0%, 100% { transform: translateX(0px); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes petTired {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(1deg); }
+}
+
+@keyframes petSad {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes petHappy {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-8px) scale(1.1); }
+}
+
+/* Estilo de la barra de navegación */
+.navbar {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 15px 0;
+  margin-bottom: 20px;
+}
+
+/* Enlaces de navegación */
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Estilo para temporizadores de cooldown */
+.cooldown-timer {
+  background: #ff6b6b;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Estados de carga y mensajes */
+.loading {
+  text-align: center;
+  padding: 20px;
+}
+
+.error {
+  background: #ff6b6b;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.success {
+  background: #00b894;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+/* Estilos para formularios */
+.form-group {
+  margin: 15px 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #74b9ff;
+}
+
+/* Estilos para el área de juego */
+.game-area {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.active-game {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px 0;
+}
+
+.game-button {
+  font-size: 24px;
+  padding: 20px 40px;
+  margin: 10px;
+}
+
+/* Estilos para el área de sueño */
+.sleep-area {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.sleeping-status {
+  background: rgba(116, 185, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.sleep-progress {
+  width: 100%;
+  height: 10px;
+  background: #e0e0e0;
+  border-radius: 5px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.sleep-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #74b9ff, #0984e3);
+  transition: width 1s ease;
+}
+
+/* Estilos para información y consejos */
+.action-info {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.action-tips {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.action-tips ul {
+  margin-left: 20px;
+}
+
+.action-tips li {
+  margin: 5px 0;
+}
+
+/* Estilos para estadísticas actuales */
+.current-stat, .current-stats {
+  margin: 20px 0;
+}
+
+.stat-item {
+  margin: 15px 0;
+}
+
+/* Estilos para acciones rápidas */
+.quick-actions {
+  margin: 20px 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Estilos para indicadores especiales */
+.sleeping-indicator {
+  background: rgba(116, 185, 255, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .pet-sprite {
+    width: 150px;
+    height: 150px;
+  }
+}
