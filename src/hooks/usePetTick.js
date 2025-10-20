@@ -16,14 +16,12 @@ export const usePetTick = (pet, setPet, user) => {
       // Verificar si han pasado 2 minutos (120000ms) desde el último tick
       if (timeSinceLastTick >= 120000) {
         // Aplicar degradación según las reglas del juego:
-        // - Hambre: -5 puntos
-        // - Energía: -3 puntos  
-        // - Felicidad: -2 puntos
+        // - Todos los stats: -5 puntos cada 2 minutos
         setPet(prev => ({
           ...prev, // Mantener todos los valores anteriores
           hunger: Math.max(0, prev.hunger - 5), // Degradar hambre (mínimo 0)
-          energy: Math.max(0, prev.energy - 3), // Degradar energía (mínimo 0)
-          happiness: Math.max(0, prev.happiness - 2), // Degradar felicidad (mínimo 0)
+          energy: Math.max(0, prev.energy - 5), // Degradar energía (mínimo 0)
+          happiness: Math.max(0, prev.happiness - 5), // Degradar felicidad (mínimo 0)
           lastTick: now // Actualizar timestamp del último tick
         }))
       }

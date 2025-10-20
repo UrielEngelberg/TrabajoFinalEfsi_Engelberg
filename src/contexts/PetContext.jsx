@@ -31,26 +31,24 @@ export const PetProvider = ({ children }) => {
     cooldowns: { // Cooldowns para las acciones (en timestamp)
       feed: 0, // Cooldown para alimentar
       play: 0, // Cooldown para jugar
-      sleep: 0 // Cooldown para dormir
+      sleep: 0, // Cooldown para dormir
+      med: 0 // Cooldown para remedio
     }
   })
 
   // Hook personalizado que maneja la degradación automática de stats
-  // Se ejecuta cada minuto y degrada stats cada 5 minutos
+  // Se ejecuta cada minuto y degrada stats cada 2 minutos
   usePetTick(pet, setPet, user)
 
   // Efecto que se ejecuta cuando cambia el usuario
   // Carga la mascota desde localStorage o crea una nueva
   useEffect(() => {
     if (user) {
-      // Intentar cargar mascota desde localStorage usando el ID del usuario
       const savedPet = localStorage.getItem(`mv:pet:${user.id}`)
       if (savedPet) {
-        // Si existe, restaurar el estado de la mascota
         const petData = JSON.parse(savedPet)
         setPet(petData)
       } else {
-        // Si no existe, crear una nueva mascota con valores por defecto
         const newPet = {
           hunger: 50,
           energy: 50,
@@ -60,94 +58,85 @@ export const PetProvider = ({ children }) => {
           cooldowns: {
             feed: 0,
             play: 0,
-            sleep: 0
+            sleep: 0,
+            med: 0
           }
         }
         setPet(newPet)
-        // Guardar inmediatamente en localStorage
         localStorage.setItem(`mv:pet:${user.id}`, JSON.stringify(newPet))
       }
     }
   }, [user])
 
-  // Efecto que guarda automáticamente la mascota en localStorage
-  // cada vez que cambia el estado de la mascota
+  // Guardado automático
   useEffect(() => {
     if (user && pet) {
-      // Guardar estado actual de la mascota en localStorage
       localStorage.setItem(`mv:pet:${user.id}`, JSON.stringify(pet))
     }
   }, [pet, user])
 
-  // Función para alimentar la mascota
+  // Derivados: enfermedad y muerte
+  const isSick = pet.hunger <= 10 || pet.energy <= 10 || pet.happiness <= 10
+  const isDead = pet.hunger <= 0 || pet.energy <= 0 || pet.happiness <= 0
+
+  // Acciones
   const feedPet = () => {
     const now = Date.now()
-    
-    // Verificar si la acción está en cooldown
-    if (now < pet.cooldowns.feed) return false
-
-    // Actualizar estado de la mascota
+    if (now < pet.cooldowns.feed || isDead || pet.sleeping) return false
     setPet(prev => ({
-      ...prev, // Mantener todos los valores anteriores
-      hunger: Math.min(100, prev.hunger + 20), // Aumentar hambre (máximo 100)
-      cooldowns: {
-        ...prev.cooldowns, // Mantener otros cooldowns
-        feed: now + 60000 // Establecer cooldown de 60 segundos
-      }
+      ...prev,
+      hunger: Math.min(100, prev.hunger + 20),
+      cooldowns: { ...prev.cooldowns, feed: now + 60000 }
     }))
-    return true // Indicar que la acción fue exitosa
+    return true
   }
 
-  // Función para jugar con la mascota
   const playWithPet = () => {
     const now = Date.now()
-    
-    // Verificar si la acción está en cooldown
-    if (now < pet.cooldowns.play) return false
-
-    // Actualizar estado de la mascota
+    if (now < pet.cooldowns.play || isDead || pet.sleeping) return false
     setPet(prev => ({
-      ...prev, // Mantener todos los valores anteriores
-      happiness: Math.min(100, prev.happiness + 15), // Aumentar felicidad (máximo 100)
-      energy: Math.max(0, prev.energy - 10), // Disminuir energía (mínimo 0)
-      cooldowns: {
-        ...prev.cooldowns, // Mantener otros cooldowns
-        play: now + 60000 // Establecer cooldown de 60 segundos
-      }
+      ...prev,
+      happiness: Math.min(100, prev.happiness + 15),
+      energy: Math.max(0, prev.energy - 10),
+      cooldowns: { ...prev.cooldowns, play: now + 60000 }
     }))
-    return true // Indicar que la acción fue exitosa
+    return true
   }
 
-  // Función para dormir la mascota
   const putPetToSleep = () => {
     const now = Date.now()
-    
-    // Verificar si la acción está en cooldown o si ya está durmiendo
-    if (now < pet.cooldowns.sleep || pet.sleeping) return false
-
-    // Poner la mascota a dormir
+    if (now < pet.cooldowns.sleep || isDead || pet.sleeping) return false
     setPet(prev => ({
-      ...prev, // Mantener todos los valores anteriores
-      sleeping: true, // Cambiar estado a durmiendo
-      cooldowns: {
-        ...prev.cooldowns, // Mantener otros cooldowns
-        sleep: now + 30000 // Establecer cooldown de 30 segundos
-      }
+      ...prev,
+      sleeping: true,
+      cooldowns: { ...prev.cooldowns, sleep: now + 30000 }
     }))
-
-    // Programar el despertar después de 30 segundos
     setTimeout(() => {
       setPet(prev => ({
-        ...prev, // Mantener todos los valores anteriores
-        sleeping: false, // Despertar la mascota
-        energy: Math.min(100, prev.energy + 25) // Restaurar energía (máximo 100)
+        ...prev,
+        sleeping: false,
+        energy: Math.min(100, prev.energy + 25)
       }))
-    }, 30000) // 30 segundos
-
-    return true // Indicar que la acción fue exitosa
+    }, 30000)
+    return true
   }
 
-  // Función para resetear la mascota cuando muere
+  // Dar remedio: solo si está enfermo; reduce penalidad curando levemente stats y aplica cooldown
+  const giveMedicine = () => {
+    const now = Date.now()
+    if (!isSick || now < pet.cooldowns.med || isDead) return false
+    setPet(prev => ({
+      ...prev,
+      // Curar un poco cada stat, sin exceder 100
+      hunger: Math.min(100, prev.hunger + 5),
+      energy: Math.min(100, prev.energy + 5),
+      happiness: Math.min(100, prev.happiness + 5),
+      cooldowns: { ...prev.cooldowns, med: now + 60000 }
+    }))
+    return true
+  }
+
+  // Reset al morir
   const resetPet = () => {
     const newPet = {
       hunger: 50,
@@ -155,26 +144,23 @@ export const PetProvider = ({ children }) => {
       happiness: 50,
       sleeping: false,
       lastTick: Date.now(),
-      cooldowns: {
-        feed: 0,
-        play: 0,
-        sleep: 0
-      }
+      cooldowns: { feed: 0, play: 0, sleep: 0, med: 0 }
     }
     setPet(newPet)
   }
 
-  // Objeto con todos los valores y funciones que estarán disponibles
-  // para los componentes que usen este contexto
+  // Exponer contexto
   const value = {
-    pet, // Estado actual de la mascota
-    feedPet, // Función para alimentar
-    playWithPet, // Función para jugar
-    putPetToSleep, // Función para dormir
-    resetPet // Función para resetear cuando muere
+    pet,
+    isSick,
+    isDead,
+    feedPet,
+    playWithPet,
+    putPetToSleep,
+    giveMedicine,
+    resetPet
   }
 
-  // Renderizar el provider con el valor del contexto
   return (
     <PetContext.Provider value={value}>
       {children}

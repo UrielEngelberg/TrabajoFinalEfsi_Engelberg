@@ -10,39 +10,28 @@ import PetStats from '../components/PetStats'
 // Componente de la página de inicio
 const Home = () => {
   const { isAuthenticated } = useUser()
-  const { pet, feedPet, playWithPet, putPetToSleep, resetPet } = usePet()
+  const { pet, feedPet, playWithPet, putPetToSleep, resetPet, isDead, isSick, giveMedicine } = usePet()
 
   // Cooldowns visibles
   const feedLeft = useCooldown(pet.cooldowns.feed)
   const playLeft = useCooldown(pet.cooldowns.play)
   const sleepLeft = useCooldown(pet.cooldowns.sleep)
+  const medLeft = useCooldown(pet.cooldowns.med)
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />
   }
 
-  const handleQuickFeed = () => {
-    feedPet()
-  }
-
-  const handleQuickPlay = () => {
-    playWithPet()
-  }
-
-  const handleQuickSleep = () => {
-    putPetToSleep()
-  }
-
-  const handleReset = () => {
-    resetPet()
-  }
+  const handleQuickFeed = () => { feedPet() }
+  const handleQuickPlay = () => { playWithPet() }
+  const handleQuickSleep = () => { putPetToSleep() }
+  const handleReset = () => { resetPet() }
+  const handleMedicine = () => { giveMedicine() }
 
   const feedDisabled = feedLeft > 0 || pet.sleeping
   const playDisabled = playLeft > 0 || pet.sleeping
   const sleepDisabled = sleepLeft > 0 || pet.sleeping
-
-  // Verificar si la mascota está muerta
-  const isDead = pet.hunger <= 0 || pet.energy <= 0 || pet.happiness <= 0
+  const medDisabled = medLeft > 0
 
   return (
     <div className="card">
@@ -96,6 +85,17 @@ const Home = () => {
               </button>
               {sleepLeft > 0 && (
                 <div className="cooldown-timer">⏰ {Math.ceil(sleepLeft / 1000)}s</div>
+              )}
+
+              {isSick && (
+                <>
+                  <button onClick={handleMedicine} disabled={medDisabled} className={`btn ${medDisabled ? 'btn-disabled' : 'btn-secondary'}`}>
+                    💊 Dar Remedio
+                  </button>
+                  {medLeft > 0 && (
+                    <div className="cooldown-timer">⏰ {Math.ceil(medLeft / 1000)}s</div>
+                  )}
+                </>
               )}
             </>
           )}
