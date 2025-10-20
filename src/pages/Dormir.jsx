@@ -6,20 +6,16 @@ import { usePet } from '../contexts/PetContext'
 import { useCooldown } from '../hooks/usePetTick'
 import PetSprite from '../components/PetSprite'
 
-// Componente de la página de dormir
 const Dormir = () => {
   const { isAuthenticated } = useUser()
   const { pet, putPetToSleep } = usePet()
   const cooldownLeft = useCooldown(pet.cooldowns.sleep)
   const [sleepProgress, setSleepProgress] = useState(0)
 
-  if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />
-  }
+  if (!isAuthenticated) return <Navigate to="/auth" replace />
 
   const handleSleep = () => {
-    const success = putPetToSleep()
-    if (success) setSleepProgress(0)
+    if (putPetToSleep()) setSleepProgress(0)
   }
 
   useEffect(() => {
@@ -28,8 +24,7 @@ const Dormir = () => {
     const startTime = Date.now()
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime
-      const progress = Math.min(100, Math.round((elapsed / totalMs) * 100))
-      setSleepProgress(progress)
+      setSleepProgress(Math.min(100, Math.round((elapsed / totalMs) * 100)))
       if (elapsed >= totalMs) clearInterval(interval)
     }, 500)
     return () => clearInterval(interval)
@@ -41,19 +36,12 @@ const Dormir = () => {
     <div className="card scene-sleep">
       <h1>😴 Dormir</h1>
 
-      {/* Cama */}
       <div className="bed-area">
         <div className="bed">
-          {/* Sprite posicionado encima de la cama */}
           <div className="bed-sprite">
             <PetSprite />
           </div>
         </div>
-      </div>
-
-      <div className="action-info">
-        <p>Poner a dormir a tu mascota la deja en estado de sueño por 30 segundos.</p>
-        <p>Al despertar recupera <strong>+25</strong> de energía.</p>
       </div>
 
       <div className="current-stats">
@@ -67,20 +55,15 @@ const Dormir = () => {
 
       {pet.sleeping ? (
         <div className="sleeping-status">
-          <h3>La mascota está durmiendo...</h3>
           <div className="sleep-progress">
             <div className="sleep-bar" style={{ width: `${sleepProgress}%` }} />
           </div>
-          <p>Progreso: {sleepProgress}%</p>
+          <p>{sleepProgress}%</p>
         </div>
       ) : (
         <button onClick={handleSleep} disabled={isDisabled} className={`btn ${isDisabled ? 'btn-disabled' : 'btn-secondary'}`}>
-          {cooldownLeft > 0 ? '⏳ En enfriamiento' : '😴 Poner a Dormir'}
+          {cooldownLeft > 0 ? `⏳ ${Math.ceil(cooldownLeft/1000)}s` : 'Dormir'}
         </button>
-      )}
-
-      {cooldownLeft > 0 && (
-        <div className="cooldown-timer">⏰ Podrás volver a dormir en: {Math.ceil(cooldownLeft / 1000)}s</div>
       )}
     </div>
   )

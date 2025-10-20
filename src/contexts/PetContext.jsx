@@ -91,6 +91,14 @@ export const PetProvider = ({ children }) => {
     return true
   }
 
+  const startPlayCooldown = () => {
+    const now = Date.now()
+    if (isDead || pet.sleeping) return false
+    if (now < pet.cooldowns.play) return false
+    setPet(prev => ({ ...prev, cooldowns: { ...prev.cooldowns, play: now + 60000 } }))
+    return true
+  }
+
   const playWithPet = () => {
     const now = Date.now()
     if (now < pet.cooldowns.play || isDead || pet.sleeping) return false
@@ -99,6 +107,17 @@ export const PetProvider = ({ children }) => {
       happiness: Math.min(100, prev.happiness + 15),
       energy: Math.max(0, prev.energy - 10),
       cooldowns: { ...prev.cooldowns, play: now + 60000 }
+    }))
+    return true
+  }
+
+  // Efecto por click durante el juego: sin tocar cooldowns
+  const playClickTick = () => {
+    if (isDead || pet.sleeping) return false
+    setPet(prev => ({
+      ...prev,
+      happiness: Math.min(100, prev.happiness + 1),
+      energy: Math.max(0, prev.energy - 1)
     }))
     return true
   }
@@ -155,7 +174,9 @@ export const PetProvider = ({ children }) => {
     isSick,
     isDead,
     feedPet,
+    startPlayCooldown,
     playWithPet,
+    playClickTick,
     putPetToSleep,
     giveMedicine,
     resetPet
