@@ -3,6 +3,7 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useUser } from '../contexts/UserContext'
 import { usePet } from '../contexts/PetContext'
+import { useInventory } from '../contexts/InventoryContext'
 import { useCooldown } from '../hooks/usePetTick'
 import PetSprite from '../components/PetSprite'
 import PetStats from '../components/PetStats'
@@ -11,6 +12,7 @@ import PetStats from '../components/PetStats'
 const Home = () => {
   const { isAuthenticated } = useUser()
   const { pet, feedPet, playWithPet, putPetToSleep, resetPet, isDead, isSick, giveMedicine } = usePet()
+  const { inventory, useItem, getItemEffects } = useInventory()
 
   // Cooldowns visibles
   const feedLeft = useCooldown(pet.cooldowns.feed)
@@ -22,13 +24,80 @@ const Home = () => {
     return <Navigate to="/auth" replace />
   }
 
-  const handleQuickFeed = () => { feedPet() }
+  // Función para encontrar la comida más barata disponible
+  const findCheapestFood = () => {
+    const foodItems = Object.keys(inventory).filter(item => {
+      const effects = getItemEffects(item)
+      return effects && inventory[item] > 0
+    })
+    
+    if (foodItems.length === 0) return null
+    
+    // Ordenar por precio (más barato primero)
+    return foodItems.reduce((cheapest, current) => {
+      const currentPrice = getItemEffects(current).price
+      const cheapestPrice = getItemEffects(cheapest).price
+      return currentPrice < cheapestPrice ? current : cheapest
+    })
+  }
+
+  const handleQuickFeed = () => {
+    if (isDead) {
+      alert('No puedes alimentar a una mascota muerta. Usa "Revivir Mascota" primero.')
+      return
+    }
+    
+    if (pet.sleeping) {
+      alert('No puedes alimentar a una mascota que está durmiendo.')
+      return
+    }
+    
+    const cheapestFood = findCheapestFood()
+    if (!cheapestFood) {
+      alert('No tienes comida en tu inventario. ¡Ve a la tienda para comprar más!')
+      return
+    }
+    
+    if (!useItem(cheapestFood, 1)) {
+      alert('No tienes este alimento en tu inventario.')
+      return
+    }
+    
+    const effects = getItemEffects(cheapestFood)
+    if (feedPet(effects)) {
+      // Mostrar mensaje de éxito
+      const message = `¡${effects.emoji} ${effects.name} usado! Efectos aplicados.`
+      // Crear un elemento temporal para mostrar el mensaje
+      const tempDiv = document.createElement('div')
+      tempDiv.className = 'quick-feed-message'
+      tempDiv.textContent = message
+      tempDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 184, 148, 0.9);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-weight: bold;
+        z-index: 1000;
+        animation: fadeInOut 3s ease-in-out;
+      `
+      document.body.appendChild(tempDiv)
+      setTimeout(() => document.body.removeChild(tempDiv), 3000)
+    } else {
+      alert('No puedes alimentar ahora. Espera un momento.')
+    }
+  }
+  
   const handleQuickPlay = () => { playWithPet() }
   const handleQuickSleep = () => { putPetToSleep() }
   const handleReset = () => { resetPet() }
   const handleMedicine = () => { giveMedicine() }
 
-  const feedDisabled = feedLeft > 0 || pet.sleeping
+  const hasFood = findCheapestFood() !== null
+  const feedDisabled = feedLeft > 0 || pet.sleeping || !hasFood
   const playDisabled = playLeft > 0 || pet.sleeping
   const sleepDisabled = sleepLeft > 0 || pet.sleeping
   const medDisabled = medLeft > 0
@@ -67,7 +136,7 @@ const Home = () => {
           ) : (
             <>
               <button onClick={handleQuickFeed} disabled={feedDisabled} className={`btn ${feedDisabled ? 'btn-disabled' : 'btn-success'}`}>
-                {pet.sleeping ? '😴 Durmiendo' : '🍎 Alimentar'}
+                {pet.sleeping ? '😴 Durmiendo' : !hasFood ? '🍎 Sin comida' : '🍎 Alimentar'}
               </button>
               {feedLeft > 0 && (
                 <div className="cooldown-timer">⏰ {Math.ceil(feedLeft / 1000)}s</div>
