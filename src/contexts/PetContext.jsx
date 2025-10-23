@@ -80,12 +80,14 @@ export const PetProvider = ({ children }) => {
   const isDead = pet.hunger <= 0 || pet.energy <= 0 || pet.happiness <= 0
 
   // Acciones
-  const feedPet = () => {
+  const feedPet = (effects) => {
     const now = Date.now()
     if (now < pet.cooldowns.feed || isDead || pet.sleeping) return false
     setPet(prev => ({
       ...prev,
-      hunger: Math.min(100, prev.hunger + 20),
+      hunger: Math.min(100, Math.max(0, prev.hunger + (effects.hunger || 0))),
+      happiness: Math.min(100, Math.max(0, prev.happiness + (effects.happiness || 0))),
+      energy: Math.min(100, Math.max(0, prev.energy + (effects.energy || 0))),
       cooldowns: { ...prev.cooldowns, feed: now + 60000 }
     }))
     return true

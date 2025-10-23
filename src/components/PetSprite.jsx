@@ -33,7 +33,7 @@ const PetSprite = () => {
     if (pet.sleeping) return 'pet-sprite pet-sleeping'
     if (pet.hunger < 20) return 'pet-sprite pet-hungry'
     if (pet.energy < 20) return 'pet-sprite pet-tired'
-    if (pet.happiness < 20) return 'pet-sprite pet-sad'
+    if (pet.happiness < 60) return 'pet-sprite pet-sad'
     return 'pet-sprite pet-happy'
   }
 

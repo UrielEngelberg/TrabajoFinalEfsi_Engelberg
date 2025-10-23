@@ -25,9 +25,10 @@ const Layout = ({ children }) => {
                 <Link to="/alimentar">🍎 Alimentar</Link>
                 <Link to="/jugar">🎮 Jugar</Link>
                 <Link to="/dormir">😴 Dormir</Link>
+                <Link to="/tienda">🛒 Tienda</Link>
                 
-                {/* Mostrar nombre de usuario actual */}
-                <span>👤 {user?.username}</span>
+                {/* Mostrar nombre de usuario actual con estilo consistente */}
+                <span className="user-info">👤 {user?.username}</span>
                 
                 {/* Botón para cerrar sesión */}
                 <button onClick={logout} className="btn btn-secondary">
