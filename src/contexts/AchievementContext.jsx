@@ -1,6 +1,7 @@
 // Context API para manejar el sistema de logros
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useUser } from './UserContext'
+import { useInventory } from './InventoryContext'
 
 // Crear el contexto de logros
 const AchievementContext = createContext()
@@ -101,6 +102,7 @@ const ACHIEVEMENTS = {
 // Provider del contexto de logros
 export const AchievementProvider = ({ children }) => {
   const { user } = useUser()
+  const { addCoins } = useInventory()
   
   // Estado de logros del usuario
   const [achievements, setAchievements] = useState({})
@@ -159,6 +161,9 @@ export const AchievementProvider = ({ children }) => {
           unlockedAt: Date.now()
         }
         hasNewAchievement = true
+        
+        // Agregar monedas de recompensa
+        addCoins(achievement.reward.coins)
         
         // Mostrar notificación de logro
         showAchievementNotification(achievement)

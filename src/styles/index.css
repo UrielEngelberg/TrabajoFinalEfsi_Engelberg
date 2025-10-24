@@ -10,7 +10,7 @@
 /* Configuración del body con gradiente de fondo */
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffb6c1;
   min-height: 100vh;
   color: #333;
 }
@@ -49,18 +49,30 @@ body {
 
 /* Alimentar: cocina */
 .card:has(h1:contains("Alimentar")) {
-  background-image: linear-gradient(45deg, rgba(255,245,230,0.6) 25%, rgba(255,255,255,0.6) 25%, rgba(255,255,255,0.6) 50%, rgba(255,245,230,0.6) 50%, rgba(255,245,230,0.6) 75%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6) 100%);
+  background: linear-gradient(135deg, rgba(255,182,193,0.8) 0%, rgba(255,255,255,0.9) 100%);
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255,105,180,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,192,203,0.3) 0%, transparent 50%),
+    linear-gradient(45deg, rgba(255,245,230,0.6) 25%, rgba(255,255,255,0.6) 25%, rgba(255,255,255,0.6) 50%, rgba(255,245,230,0.6) 50%, rgba(255,245,230,0.6) 75%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6) 100%);
   background-size: 20px 20px;
 }
 
 /* Jugar: parque */
 .card:has(h1:contains("Jugar")) {
-  background-image: linear-gradient(180deg, rgba(200,255,200,0.35), rgba(255,255,255,0.6));
+  background: linear-gradient(135deg, rgba(255,182,193,0.8) 0%, rgba(255,255,255,0.9) 100%);
+  background-image: 
+    radial-gradient(circle at 30% 70%, rgba(144,238,144,0.4) 0%, transparent 60%),
+    radial-gradient(circle at 70% 30%, rgba(255,192,203,0.3) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(200,255,200,0.35), rgba(255,255,255,0.6));
 }
 
 /* Dormir: dormitorio con cama simulada */
 .card:has(h1:contains("Dormir")) {
-  background-image: linear-gradient(180deg, rgba(230,240,255,0.6), rgba(255,255,255,0.8));
+  background: linear-gradient(135deg, rgba(255,182,193,0.8) 0%, rgba(255,255,255,0.9) 100%);
+  background-image: 
+    radial-gradient(circle at 25% 75%, rgba(135,206,250,0.4) 0%, transparent 60%),
+    radial-gradient(circle at 75% 25%, rgba(255,192,203,0.3) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(230,240,255,0.6), rgba(255,255,255,0.8));
   position: relative;
 }
 .card:has(h1:contains("Dormir"))::after {
@@ -173,6 +185,17 @@ body {
 }
 
 /* Estilos para logros */
+.card:has(h1:contains("Logros")) {
+  background: linear-gradient(135deg, rgba(255,182,193,0.8) 0%, rgba(255,255,255,0.9) 100%);
+  background-image: 
+    radial-gradient(circle at 30% 30%, rgba(255,0,0,0.2) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255,192,203,0.2) 0%, transparent 70%),
+    linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%),
+    linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 75%, transparent 75%);
+  background-size: 50px 50px, 60px 60px, 80px 80px, 25px 25px, 25px 25px;
+}
+
 .achievements-summary {
   margin: 20px 0;
   text-align: center;
@@ -755,11 +778,18 @@ body {
   background-size: 20px 20px;
 }
 .scene-home {
-  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.6), rgba(255,255,255,0.2)), linear-gradient(180deg, rgba(200,230,255,0.4) 0%, rgba(255,255,255,0.7) 60%);
-  background-blend-mode: lighten;
+  background: linear-gradient(rgba(255,182,193,0.6), rgba(255,182,193,0.6)), 
+              url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2015&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 .scene-shop {
-  background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,255,255,0.8));
+  background: linear-gradient(rgba(255,182,193,0.7), rgba(255,182,193,0.7)), 
+              url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 /* Cama y posicionamiento del sprite */
