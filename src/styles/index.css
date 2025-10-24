@@ -30,11 +30,13 @@ body {
 /* Estilo de tarjetas con efecto glassmorphism */
 .card {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  min-height: 80vh;
+  margin: 20px 0;
 }
 
 /* Fondos temáticos por escena */
@@ -186,14 +188,11 @@ body {
 
 /* Estilos para logros */
 .card:has(h1:contains("Logros")) {
-  background: linear-gradient(135deg, rgba(255,182,193,0.8) 0%, rgba(255,255,255,0.9) 100%);
-  background-image: 
-    radial-gradient(circle at 30% 30%, rgba(255,0,0,0.2) 0%, transparent 50%),
-    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.3) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(255,192,203,0.2) 0%, transparent 70%),
-    linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%),
-    linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 75%, transparent 75%);
-  background-size: 50px 50px, 60px 60px, 80px 80px, 25px 25px, 25px 25px;
+  background: linear-gradient(rgba(255,182,193,0.6), rgba(255,182,193,0.6)), 
+              url('https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .achievements-summary {
@@ -768,18 +767,29 @@ body {
 
 /* Escenas por página */
 .scene-sleep {
-  background: linear-gradient(180deg, rgba(230,240,255,0.7), rgba(255,255,255,0.9));
-}
-.scene-play {
-  background: linear-gradient(180deg, rgba(200,255,200,0.4), rgba(255,255,255,0.85));
-}
-.scene-feed {
-  background-image: linear-gradient(45deg, rgba(255,245,230,0.6) 25%, rgba(255,255,255,0.6) 25%, rgba(255,255,255,0.6) 50%, rgba(255,245,230,0.6) 50%, rgba(255,245,230,0.6) 75%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6) 100%);
-  background-size: 20px 20px;
-}
-.scene-home {
   background: linear-gradient(rgba(255,182,193,0.6), rgba(255,182,193,0.6)), 
               url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2015&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.scene-play {
+  background: linear-gradient(rgba(255,182,193,0.5), rgba(255,182,193,0.5)), 
+              url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.scene-feed {
+  background: linear-gradient(rgba(255,182,193,0.6), rgba(255,182,193,0.6)), 
+              url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.scene-home {
+  background: linear-gradient(rgba(255,182,193,0.5), rgba(255,182,193,0.5)), 
+              url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
