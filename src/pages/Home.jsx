@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom'
 import { useUser } from '../contexts/UserContext'
 import { usePet } from '../contexts/PetContext'
 import { useInventory } from '../contexts/InventoryContext'
+import { useAchievement } from '../contexts/AchievementContext'
 import { useCooldown } from '../hooks/usePetTick'
 import PetSprite from '../components/PetSprite'
 import PetStats from '../components/PetStats'
@@ -11,14 +12,16 @@ import PetStats from '../components/PetStats'
 // Componente de la página de inicio
 const Home = () => {
   const { isAuthenticated } = useUser()
-  const { pet, feedPet, playWithPet, putPetToSleep, resetPet, isDead, isSick, giveMedicine } = usePet()
+  const { pet, feedPet, playWithPet, putPetToSleep, resetPet, isDead, isSick, isDirty, giveMedicine, bathePet } = usePet()
   const { inventory, useItem, getItemEffects } = useInventory()
+  const { incrementFeed, incrementPlay, incrementSleep, incrementBath } = useAchievement()
 
   // Cooldowns visibles
   const feedLeft = useCooldown(pet.cooldowns.feed)
   const playLeft = useCooldown(pet.cooldowns.play)
   const sleepLeft = useCooldown(pet.cooldowns.sleep)
   const medLeft = useCooldown(pet.cooldowns.med)
+  const bathLeft = useCooldown(pet.cooldowns.bath)
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />
@@ -65,6 +68,9 @@ const Home = () => {
     
     const effects = getItemEffects(cheapestFood)
     if (feedPet(effects)) {
+      // Incrementar contador de alimentación para logros
+      incrementFeed()
+      
       // Mostrar mensaje de éxito
       const message = `¡${effects.emoji} ${effects.name} usado! Efectos aplicados.`
       // Crear un elemento temporal para mostrar el mensaje
@@ -91,8 +97,21 @@ const Home = () => {
     }
   }
   
-  const handleQuickPlay = () => { playWithPet() }
-  const handleQuickSleep = () => { putPetToSleep() }
+  const handleQuickPlay = () => { 
+    if (playWithPet()) {
+      incrementPlay()
+    }
+  }
+  const handleQuickSleep = () => { 
+    if (putPetToSleep()) {
+      incrementSleep()
+    }
+  }
+  const handleQuickBath = () => {
+    if (bathePet()) {
+      incrementBath()
+    }
+  }
   const handleReset = () => { resetPet() }
   const handleMedicine = () => { giveMedicine() }
 
@@ -101,6 +120,7 @@ const Home = () => {
   const playDisabled = playLeft > 0 || pet.sleeping
   const sleepDisabled = sleepLeft > 0 || pet.sleeping
   const medDisabled = medLeft > 0
+  const bathDisabled = bathLeft > 0 || pet.sleeping
 
   return (
     <div className="card">
@@ -121,7 +141,8 @@ const Home = () => {
           {pet.hunger < 20 && pet.hunger > 10 && "🍎 Tu mascota tiene hambre! "}
           {pet.energy < 20 && pet.energy > 10 && "😴 Tu mascota está cansada! "}
           {pet.happiness < 20 && pet.happiness > 10 && "😢 Tu mascota está triste! "}
-          {pet.hunger >= 20 && pet.energy >= 20 && pet.happiness >= 20 && "😊 Tu mascota está feliz!"}
+          {isDirty && "🛁 Tu mascota está sucia! "}
+          {pet.hunger >= 20 && pet.energy >= 20 && pet.happiness >= 20 && !isDirty && "😊 Tu mascota está feliz!"}
         </p>
       </div>
 
@@ -154,6 +175,13 @@ const Home = () => {
               </button>
               {sleepLeft > 0 && (
                 <div className="cooldown-timer">⏰ {Math.ceil(sleepLeft / 1000)}s</div>
+              )}
+
+              <button onClick={handleQuickBath} disabled={bathDisabled} className={`btn ${bathDisabled ? 'btn-disabled' : 'btn-info'}`}>
+                {pet.sleeping ? '😴 Durmiendo' : isDirty ? '🛁 Bañar (Sucio)' : '🛁 Bañar'}
+              </button>
+              {bathLeft > 0 && (
+                <div className="cooldown-timer">⏰ {Math.ceil(bathLeft / 1000)}s</div>
               )}
 
               {isSick && (

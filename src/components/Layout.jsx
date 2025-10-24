@@ -26,6 +26,8 @@ const Layout = ({ children }) => {
                 <Link to="/jugar">🎮 Jugar</Link>
                 <Link to="/dormir">😴 Dormir</Link>
                 <Link to="/tienda">🛒 Tienda</Link>
+                <Link to="/logros">🏆 Logros</Link>
+                <Link to="/social">👥 Social</Link>
                 
                 {/* Mostrar nombre de usuario actual con estilo consistente */}
                 <span className="user-info">👤 {user?.username}</span>

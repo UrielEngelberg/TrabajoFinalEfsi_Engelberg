@@ -26,13 +26,15 @@ export const PetProvider = ({ children }) => {
     hunger: 50, // Hambre inicial (0-100)
     energy: 50, // Energía inicial (0-100)
     happiness: 50, // Felicidad inicial (0-100)
+    hygiene: 50, // Higiene inicial (0-100)
     sleeping: false, // Estado de sueño
     lastTick: Date.now(), // Timestamp del último tick automático
     cooldowns: { // Cooldowns para las acciones (en timestamp)
       feed: 0, // Cooldown para alimentar
       play: 0, // Cooldown para jugar
       sleep: 0, // Cooldown para dormir
-      med: 0 // Cooldown para remedio
+      med: 0, // Cooldown para remedio
+      bath: 0 // Cooldown para bañar
     }
   })
 
@@ -53,13 +55,15 @@ export const PetProvider = ({ children }) => {
           hunger: 50,
           energy: 50,
           happiness: 50,
+          hygiene: 50,
           sleeping: false,
           lastTick: Date.now(),
           cooldowns: {
             feed: 0,
             play: 0,
             sleep: 0,
-            med: 0
+            med: 0,
+            bath: 0
           }
         }
         setPet(newPet)
@@ -78,6 +82,7 @@ export const PetProvider = ({ children }) => {
   // Derivados: enfermedad y muerte
   const isSick = pet.hunger <= 10 || pet.energy <= 10 || pet.happiness <= 10
   const isDead = pet.hunger <= 0 || pet.energy <= 0 || pet.happiness <= 0
+  const isDirty = pet.hygiene <= 20
 
   // Acciones
   const feedPet = (effects) => {
@@ -157,15 +162,29 @@ export const PetProvider = ({ children }) => {
     return true
   }
 
+  // Bañar mascota: mejora higiene y felicidad
+  const bathePet = () => {
+    const now = Date.now()
+    if (now < pet.cooldowns.bath || isDead || pet.sleeping) return false
+    setPet(prev => ({
+      ...prev,
+      hygiene: Math.min(100, prev.hygiene + 30),
+      happiness: Math.min(100, prev.happiness + 10),
+      cooldowns: { ...prev.cooldowns, bath: now + 120000 } // 2 minutos de cooldown
+    }))
+    return true
+  }
+
   // Reset al morir
   const resetPet = () => {
     const newPet = {
       hunger: 50,
       energy: 50,
       happiness: 50,
+      hygiene: 50,
       sleeping: false,
       lastTick: Date.now(),
-      cooldowns: { feed: 0, play: 0, sleep: 0, med: 0 }
+      cooldowns: { feed: 0, play: 0, sleep: 0, med: 0, bath: 0 }
     }
     setPet(newPet)
   }
@@ -175,12 +194,14 @@ export const PetProvider = ({ children }) => {
     pet,
     isSick,
     isDead,
+    isDirty,
     feedPet,
     startPlayCooldown,
     playWithPet,
     playClickTick,
     putPetToSleep,
     giveMedicine,
+    bathePet,
     resetPet
   }
 

@@ -22,6 +22,7 @@ export const usePetTick = (pet, setPet, user) => {
           hunger: Math.max(0, prev.hunger - 5), // Degradar hambre (mínimo 0)
           energy: Math.max(0, prev.energy - 5), // Degradar energía (mínimo 0)
           happiness: Math.max(0, prev.happiness - 5), // Degradar felicidad (mínimo 0)
+          hygiene: Math.max(0, prev.hygiene - 3), // Degradar higiene (mínimo 0) - más lento
           lastTick: now // Actualizar timestamp del último tick
         }))
       }

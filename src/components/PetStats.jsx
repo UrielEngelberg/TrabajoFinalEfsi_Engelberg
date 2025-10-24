@@ -38,6 +38,9 @@ const PetStats = () => {
       {/* Barra de felicidad */}
       <StatsBar label="Felicidad" value={pet.happiness} type="happiness" />
       
+      {/* Barra de higiene */}
+      <StatsBar label="Higiene" value={pet.hygiene} type="hygiene" />
+      
       {/* Indicador especial si la mascota está durmiendo */}
       {pet.sleeping && (
         <div className="sleeping-indicator">
