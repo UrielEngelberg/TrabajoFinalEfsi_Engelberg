@@ -16,7 +16,7 @@ const Logros = () => {
   const unlockedAchievements = getUnlockedAchievements()
 
   return (
-    <div className="card">
+    <div className="card scene-achievements">
       <h1>🏆 Logros</h1>
       
       <div className="achievements-summary">

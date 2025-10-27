@@ -56,7 +56,7 @@ const Alimentar = () => {
 
   return (
     <div className="card scene-feed">
-      <h1>🍎 Alimentar</h1>
+      <h1>🍎 Cocina</h1>
 
       <div className="current-stats">
         <div className="stat-item">

@@ -50,7 +50,7 @@ body {
 }
 
 /* Alimentar: cocina */
-.card:has(h1:contains("Alimentar")) {
+.card:has(h1:contains("Cocina")) {
   background: linear-gradient(135deg, rgba(255,182,193,0.8) 0%, rgba(255,255,255,0.9) 100%);
   background-image: 
     radial-gradient(circle at 20% 80%, rgba(255,105,180,0.3) 0%, transparent 50%),
@@ -187,12 +187,12 @@ body {
 }
 
 /* Estilos para logros */
-.card:has(h1:contains("Logros")) {
-  background: linear-gradient(rgba(255,182,193,0.6), rgba(255,182,193,0.6)), 
-              url('https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+.scene-achievements {
+  background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+              url('https://media.cnn.com/api/v1/images/stellar/prod/cnne-595284-fbl-libertadores-river-boca.jpg?c=original');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 .achievements-summary {
@@ -795,8 +795,8 @@ body {
   background-attachment: fixed;
 }
 .scene-shop {
-  background: linear-gradient(rgba(255,182,193,0.7), rgba(255,182,193,0.7)), 
-              url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+  background: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.4)), 
+              url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
