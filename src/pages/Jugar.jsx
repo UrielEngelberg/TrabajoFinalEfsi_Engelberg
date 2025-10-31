@@ -80,7 +80,9 @@ const Jugar = () => {
     if (!gameActive || currentGame !== 'click') return
     const newClicks = clicks + 1
     setClicks(newClicks)
-    playClickTick()
+    // Cada 5 clics: +1 felicidad y -1 energía; en los demás: 0
+    const isFifth = newClicks % 5 === 0
+    playClickTick(isFifth ? 1 : 0, isFifth ? -1 : 0)
     
     // Ganar 1 moneda cada 10 clicks
     if (newClicks % 10 === 0) {

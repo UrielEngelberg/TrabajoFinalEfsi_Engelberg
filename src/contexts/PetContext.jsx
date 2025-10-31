@@ -119,12 +119,12 @@ export const PetProvider = ({ children }) => {
   }
 
   // Efecto por click durante el juego: sin tocar cooldowns
-  const playClickTick = () => {
+  const playClickTick = (happinessDelta = 0, energyDelta = 0) => {
     if (isDead || pet.sleeping) return false
     setPet(prev => ({
       ...prev,
-      happiness: Math.min(100, prev.happiness + 1),
-      energy: Math.max(0, prev.energy - 1)
+      happiness: Math.min(100, Math.max(0, prev.happiness + happinessDelta)),
+      energy: Math.min(100, Math.max(0, prev.energy + energyDelta))
     }))
     return true
   }
